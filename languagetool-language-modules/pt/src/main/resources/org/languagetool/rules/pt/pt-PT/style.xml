@@ -302,19 +302,6 @@ USA
 </rulegroup>
 
 
-        <rule id='FAZER_DESPORTO' name="[pt-PT] 'Fazer' desporto → Praticar" tone_tags="formal">
-            <pattern>
-                <marker>
-                    <token skip='4' inflected='yes'>fazer</token>
-                </marker>
-                <token>desporto</token>
-            </pattern>
-            <message>&informal_msg;</message>
-            <suggestion><match no='1' postag='V.+' postag_regexp='yes'>praticar</match></suggestion>
-            <example correction="praticar">Vou <marker>fazer</marker> muito desporto.</example>
-        </rule>
-
-
     <!-- VELHA ESCOLA velha guarda -->
     <!--      Created by Marco A.G.Pinto, Portuguese rule 2020-10-27 (21-OCT-2020+)     -->
     <rule id='VELHA_ESCOLA_VELHA_GUARDA' name="[pt-PT] Velha escola → Velha guarda" tone_tags="formal">
@@ -3314,6 +3301,21 @@ USA
         </rule>
 
 
+    <rule id='FAZER_DESPORTO' name="[pt-PT][Formal] 'Fazer' desporto → Praticar" tone_tags="formal">
+        <!-- Used ChatGPT 4o for enhancements and extra accuracy -->
+        <pattern>
+            <marker>
+                <token skip='4' inflected='yes'>fazer</token>
+            </marker>
+            <token regexp='yes'>desportos?</token>
+        </pattern>
+        <message>O termo &quot;praticar desporto&quot; é mais formal e transmite uma ideia de frequência e seriedade, enquanto &quot;fazer desporto&quot; é mais casual e generalista.</message>
+        <suggestion><match no='1' postag='V.+' postag_regexp='yes'>praticar</match></suggestion>
+        <example correction="praticar">Vou <marker>fazer</marker> muito desporto.</example>
+        <example correction="praticar">Vou <marker>fazer</marker> desportos de combate.</example>
+    </rule>
+
+
     <rule id='TIVER_ESTIVER' name='[pt-PT][Formal] tiver/estiver' tone_tags="formal">
         <antipattern>
             <token postag='NC.+|AQ.+|CS|RG' postag_regexp='yes'/>
@@ -4091,41 +4093,46 @@ USA
 
 
     <rule id='AVIÃO_DE_COMBATE_PT_PT' name="[pt-PT][Simplificar] Avião de combate → caça" tone_tags="objective">
+        <!-- Used ChatGPT 4o for enhancements and extra accuracy -->
+        <!-- With "aeronave" there was the problem of it being a female word messing the suggestions -->
         <pattern>
-            <marker>
-                <token regexp='yes'>avi(ão|ões)|aeroplanos?</token>
-                <token>de</token>
-                <token regexp='yes'>combate|guerra</token>
-            </marker>
+            <token regexp='yes'>avi(ão|ões)|aeroplanos?|caças?|jac?tos?</token>
+            <token>de</token>
+            <token regexp='yes'>combate|guerra</token>
         </pattern>
-        <message>&simplify_msg;</message>
+        <message>Substitua o termo por &quot;caça&quot; apenas quando se referir a aeronaves de combate aéreo.</message>
         <suggestion><match no='1' postag='NC.(.)000' postag_replace='NCC$1000'>caça</match></suggestion>
         <example correction="caça">O <marker>avião de combate</marker> é muito rápido.</example>
         <example correction="caças">Os <marker>aviões de combate</marker> são muito rápidos.</example>
     </rule>
 
 
-    <rule id='CHEGAR_AO_FIM_FINDAR_TERMINAR' name="[pt-PT][Simplificar] Chegar ao fim → findar/terminar/acabar" type="style" tone_tags="objective">
-    <!-- IDEA shorten_it -->
-    <!--      Created by Marco A.G.Pinto, Portuguese rule 2022-07-03 (Checked/Enhanced) (5-JUN-2022+)      -->
-    <!--
-        Outro ano que chega ao fim. → Outro ano que finda/termina.
-        Outro ano a chegar ao fim. → Outro ano a findar/terminar.
-    -->
+    <rule id='CHEGAR_AO_FIM_FINDAR_TERMINAR' name="[pt-PT][Simplificar] Chegar ao fim → findar/terminar/acabar" type="style" tone_tags="objective" default="temp_off">
+        <!-- Used ChatGPT 4o for enhancements and extra accuracy -->
+        <antipattern>
+            <token postag='V.+|N.+|AQ.+|UNKNOWN|RN|SPS00' postag_regexp='yes'/>
+            <token skip='4' regexp='yes'>a|por|que|se</token>
+            <token inflected='yes'>chegar</token>
+            <token>ao</token>
+            <token>fim</token>
+            <token regexp='yes'>d[ao]s?|de</token>
+            <example>Nossos irmãos dizem que não chega ao fim da estação, e que chama pelos filhos.</example>
+            <example>Kinako se recusa, explicando que ela está chegando ao fim de sua vida útil natural.</example>
+            <example>Reformas variadas (e demasiadas, não se chegando ao fim de nenhuma, o que também é recorrente).</example>
+            <example>Há diversos caminhos para se chegar ao fim de um estágio e uma infinidade de segredos bem escondidos.</example>
+        </antipattern>
         <pattern>
-            <token/>
-            <token regexp='yes'>a|que</token>
-            <token min="0" max="1"><exception regexp='no' inflected='yes'>chegar</exception></token>
+            <token skip='4' regexp='yes'>a|por|que|se</token>
             <marker>
                 <token inflected='yes'>chegar</token>
                 <token>ao</token>
                 <token>fim</token>
             </marker>
         </pattern>
-        <message>Enriqueça a linguagem para causar mais impacto ao leitor.</message>
-        <suggestion><match no='4' postag='V.+' postag_regexp='yes'>findar</match></suggestion>
-        <suggestion><match no='4' postag='V.+' postag_regexp='yes'>terminar</match></suggestion>
-        <suggestion><match no='4' postag='V.+' postag_regexp='yes'>acabar</match></suggestion>
+        <message>Substitua &quot;chegar ao fim&quot; por uma expressão equivalente, mantendo a concordância e o sentido da frase.</message>
+        <suggestion><match no='2' postag='V.+' postag_regexp='yes'>findar</match></suggestion>
+        <suggestion><match no='2' postag='V.+' postag_regexp='yes'>terminar</match></suggestion>
+        <suggestion><match no='2' postag='V.+' postag_regexp='yes'>acabar</match></suggestion>
         <example correction="finda|termina|acaba">Outro ano que <marker>chega ao fim</marker>.</example>
     </rule>
 
